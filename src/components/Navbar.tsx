@@ -62,6 +62,7 @@ export default function Navbar() {
   };
 
   const navLinks = [
+    { href: "#hero", label: "Home" },
     { href: "#about", label: "About" },
     { href: "#projects", label: "Projects" },
     { href: "#contact", label: "Contact" },
@@ -84,13 +85,6 @@ export default function Navbar() {
             {link.label}
           </a>
         ))}
-        <a
-          href="/resume.pdf"
-          download
-          className="text-base hover:text-[var(--color-accent)] transition-colors"
-        >
-          Resume
-        </a>
       </div>
       <div className="flex-1 flex justify-end items-center gap-4">
         <a
@@ -200,14 +194,6 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
-            <a
-              href="/resume.pdf"
-              download
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-sm hover:text-[var(--color-accent)] transition-colors px-2"
-            >
-              Resume
-            </a>
           </div>
         </div>
       )}

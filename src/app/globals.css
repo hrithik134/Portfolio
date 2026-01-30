@@ -4,6 +4,7 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 110%;
 }
 
 :root {
@@ -14,9 +15,10 @@ html {
   color-scheme: light dark;
 }
 
+/* Dark bg tuned to match hero image 2.jpeg; try #120D1C (darker) or #1A1724 (lighter) if needed */
 @media (prefers-color-scheme: dark) {
   :root:not(.light):not(.dark) {
-    --color-bg: #050816;
+    --color-bg: #070c20
     --color-fg: #e5e7eb;
     --color-muted: #9ca3af;
     --color-accent: #7c3aed;
@@ -24,14 +26,14 @@ html {
 }
 
 html.dark {
-  --color-bg: #050816;
+  --color-bg: #000103;
   --color-fg: #e5e7eb;
   --color-muted: #9ca3af;
   --color-accent: #7c3aed;
 }
 
 html.light {
-  --color-bg: #ffffff;
+  --color-bg: #ffffffe1;
   --color-fg: #0f172a;
   --color-muted: #6b7280;
   --color-accent: #0f766e;
@@ -129,5 +131,20 @@ body {
   }
   100% {
     opacity: 0.1;
+  }
+}
+
+.typing-cursor {
+  animation: typing-cursor-blink 1s step-end infinite;
+}
+
+@keyframes typing-cursor-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
   }
 }
