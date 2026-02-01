@@ -29,18 +29,12 @@ export default function LogoSlider({ items }: LogoSliderProps) {
 
   const onPointerDown = useCallback(() => {
     setIsMouseDown(true);
-  }, []);
-
-  const onPointerUp = useCallback(() => {
-    setIsMouseDown(false);
-  }, []);
-
-  const onDragStart = useCallback(() => {
     setIsDragging(true);
     setHoveredIndex(null);
   }, []);
 
-  const onDragEnd = useCallback(() => {
+  const onPointerUp = useCallback(() => {
+    setIsMouseDown(false);
     setIsDragging(false);
   }, []);
 
@@ -49,16 +43,12 @@ export default function LogoSlider({ items }: LogoSliderProps) {
 
     emblaApi.on("pointerDown", onPointerDown);
     emblaApi.on("pointerUp", onPointerUp);
-    emblaApi.on("dragStart", onDragStart);
-    emblaApi.on("dragEnd", onDragEnd);
 
     return () => {
       emblaApi.off("pointerDown", onPointerDown);
       emblaApi.off("pointerUp", onPointerUp);
-      emblaApi.off("dragStart", onDragStart);
-      emblaApi.off("dragEnd", onDragEnd);
     };
-  }, [emblaApi, onPointerDown, onPointerUp, onDragStart, onDragEnd]);
+  }, [emblaApi, onPointerDown, onPointerUp]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -99,7 +89,7 @@ export default function LogoSlider({ items }: LogoSliderProps) {
         {/* Slider container */}
         <div
           ref={emblaRef}
-          className="overflow-hidden rounded-lg border border-[var(--color-muted)]/20 bg-[var(--color-muted)]/10 h-32"
+          className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 dark:bg-white/5 backdrop-blur-md shadow-lg shadow-black/20 h-32"
         >
           <div className="flex h-full">
             {items.map((item, index) => (

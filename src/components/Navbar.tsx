@@ -71,8 +71,8 @@ export default function Navbar() {
   const desktopNav = (
     <div className="hidden md:flex items-center w-full">
       <div className="flex-1">
-        <a href="#hero" className="text-2xl font-bold font-heading">
-          Portfolio
+        <a href="/" onClick={(e) => { e.preventDefault(); window.location.reload(); }} className="block">
+          <img src="/images/logo.png" alt="Portfolio" className="h-8 w-auto" />
         </a>
       </div>
       <div className="flex-1 flex justify-center gap-8">
@@ -80,7 +80,7 @@ export default function Navbar() {
           <a
             key={link.href}
             href={link.href}
-            className="text-base hover:text-[var(--color-accent)] transition-colors"
+            className="text-base text-[rgba(244,244,245,1)] hover:text-[var(--color-accent)] transition-colors"
           >
             {link.label}
           </a>
@@ -91,9 +91,9 @@ export default function Navbar() {
           href="https://github.com/hrithik134/Portfolio"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-3 py-1.5 text-sm rounded-md border border-[var(--color-accent)] text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
+          className="px-3 py-1.5 text-sm rounded-md border border-[var(--color-accent)] text-[var(--color-fg)] bg-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
         >
-          Visit Repos
+          Visit Repo
         </a>
         <button
           onClick={toggleTheme}
@@ -124,7 +124,9 @@ export default function Navbar() {
     return (
       <nav className="w-full py-4 px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="text-xl font-bold">Portfolio</div>
+          <a href="/" onClick={(e) => { e.preventDefault(); window.location.reload(); }}>
+            <img src="/images/logo.png" alt="Portfolio" className="h-7 w-auto" />
+          </a>
         </div>
       </nav>
     );
@@ -146,7 +148,7 @@ export default function Navbar() {
             href="https://github.com/hrithik134/Portfolio"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3 py-1.5 text-sm rounded-md border border-[var(--color-accent)] text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
+            className="px-3 py-1.5 text-sm rounded-md border border-[var(--color-accent)] text-[var(--color-fg)] bg-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
           >
             Visit Repos
           </a>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Almendra+Display&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -33,7 +35,7 @@ html.dark {
 }
 
 html.light {
-  --color-bg: #ffffffe1;
+  --color-bg: #e0e0e0;
   --color-fg: #0f172a;
   --color-muted: #6b7280;
   --color-accent: #0f766e;
@@ -50,12 +52,34 @@ body {
   color: var(--color-muted);
 }
 
+.font-nexus-banner {
+  font-family: 'UnifrakturMaguntia', 'Almendra Display', serif;
+}
+
+/* Light mode: no vertical border, flat ends so tech stack bar merges with background */
+.logo-slider-bar {
+  border-left-width: 0;
+  border-right-width: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+html.dark .logo-slider-bar {
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
 .font-heading {
   font-family: var(--font-lora), system-ui, serif;
 }
 
 .hero-float-chip {
-  @apply absolute inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/10 dark:bg-white/5 border border-white/20;
+  @apply absolute inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-black dark:bg-neutral-700 border border-white/10;
   animation-name: hero-float;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
@@ -145,6 +169,32 @@ body {
   }
   50.01%,
   100% {
+    opacity: 0;
+  }
+}
+
+.animate-nexus-in {
+  animation: nexus-fade-in 0.2s ease-out forwards;
+}
+
+.animate-nexus-out {
+  animation: nexus-fade-out 0.2s ease-out forwards;
+}
+
+@keyframes nexus-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes nexus-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
     opacity: 0;
   }
 }
