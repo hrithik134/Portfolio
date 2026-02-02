@@ -5,15 +5,12 @@ import { Redis } from "@upstash/redis";
 const contactSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
-  subject: z.string().min(1),
+  subject: z.string().optional().default(""),
   message: z.string().min(1).max(5000),
   website: z.string().optional().nullable(),
 });
 
 type ContactBody = z.infer<typeof contactSchema>;
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-const CONTACT_TO_EMAIL = process.env.CONTACT_TO_EMAIL;
 
 const hasRedisConfig =
   !!process.env.UPSTASH_REDIS_REST_URL && !!process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -117,9 +114,10 @@ async function handlePost(request: Request): Promise<Response> {
       }
     }
 
-    if (!CONTACT_TO_EMAIL) {
-      // Misconfigured server; treat as internal error
-      console.error("/api/contact email error: CONTACT_TO_EMAIL missing");
+    const apiKey = process.env.RESEND_API_KEY;
+    const toEmail = process.env.CONTACT_TO_EMAIL;
+    if (!toEmail || !apiKey) {
+      console.error("/api/contact email error: missing CONTACT_TO_EMAIL or RESEND_API_KEY");
       return new Response(
         JSON.stringify({
           ok: false,
@@ -134,15 +132,17 @@ async function handlePost(request: Request): Promise<Response> {
       );
     }
 
+    const resend = new Resend(apiKey);
+    const subjectLine = (data.subject ?? "").trim() || "(No subject)";
     await resend.emails.send({
       from: "onboarding@resend.dev",
-      to: CONTACT_TO_EMAIL,
-      reply_to: data.email,
-      subject: `[Portfolio Contact] ${data.subject}`,
+      to: toEmail,
+      replyTo: data.email,
+      subject: `[Portfolio Contact] ${subjectLine}`,
       text: [
         `Name: ${data.name}`,
         `Email: ${data.email}`,
-        `Subject: ${data.subject}`,
+        `Subject: ${subjectLine}`,
         "",
         "Message:",
         data.message,
