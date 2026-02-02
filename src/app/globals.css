@@ -173,6 +173,15 @@ html.dark .logo-slider-bar {
   }
 }
 
+.nexus-card-glow {
+  box-shadow: 0 0 14px 2px color-mix(in srgb, var(--color-accent) 85%, transparent);
+  filter: drop-shadow(0 0 70px color-mix(in srgb, var(--color-accent) 30%, transparent));
+}
+
+.nexus-role-pill-glow {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
 .animate-nexus-in {
   animation: nexus-fade-in 0.2s ease-out forwards;
 }

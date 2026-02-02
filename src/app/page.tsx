@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import LogoSlider from "@/components/LogoSlider";
@@ -107,18 +107,20 @@ function AnimatedCard({
 
 export default function Home() {
   const shouldReduceMotion = useReducedMotion();
-  const roles = [
+  const roles = useMemo(() => [
     "AI & Machine Learning Engineer",
     "Problem Solver",
     "Manga Reader",
     "ML Enthusiast",
     "Tech Explorer",
-  ];
+  ], []);
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [imageReady, setImageReady] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const check = () => setIsDark(document.documentElement.classList.contains("dark"));
@@ -127,6 +129,45 @@ export default function Home() {
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => obs.disconnect();
   }, []);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatusMessage(null);
+    if (isSubmitting) return;
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const name = (formData.get("user_name") ?? "").toString();
+    const email = (formData.get("email") ?? "").toString();
+    const subject = (formData.get("subject") ?? "").toString();
+    const message = (formData.get("message") ?? "").toString();
+    const websiteValue = formData.get("website");
+    const website =
+      websiteValue === null || websiteValue === undefined
+        ? undefined
+        : websiteValue.toString();
+
+    try {
+      setIsSubmitting(true);
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, subject, message, website }),
+      });
+
+      if (res.ok) {
+        form.reset();
+        setStatusMessage("Message sent successfully.");
+      } else {
+        setStatusMessage("Something went wrong. Please try again.");
+      }
+    } catch {
+      setStatusMessage("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -268,7 +309,7 @@ export default function Home() {
     {
       title: "AR-Gesture based Inventory Management System",
       description:
-        "Personalized workout and nutrition guidance powered by GPT-4o for gym-goers.",
+        "Personalized workout and nutrition guidance powered by powerful LLM (eg: GPT-4o,Gemini) for Fitness/gym consistent Individuals.",
       tech: ["GPT-4o", "API", "Fitness"],
       github: "",
       live: "",
@@ -620,7 +661,7 @@ export default function Home() {
             <div
               ref={nexusPlaceholderRef}
               tabIndex={0}
-              className="flex flex-col overflow-visible w-full max-w-[340px] min-h-[420px] rounded-2xl border border-white/10 border-t border-white/10 bg-black/95 shadow-[0_0_14px_2px_rgba(124,58,237,0.85)] [filter:drop-shadow(0_0_70px_rgba(124,58,237,0.3))]"
+              className="flex flex-col overflow-visible w-full max-w-[340px] min-h-[420px] rounded-2xl border border-white/10 border-t border-white/10 bg-black/95 nexus-card-glow"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === "Tab") e.preventDefault();
@@ -628,7 +669,9 @@ export default function Home() {
             >
               {/* Section A — Banner */}
               <div
-                className="h-28 rounded-t-2xl bg-gradient-to-b from-[#3b0764] to-[#5b21b6] border-b border-white/10 flex-shrink-0 flex items-center justify-center"
+                className={`h-28 rounded-t-2xl border-b border-white/10 flex-shrink-0 flex items-center justify-center ${
+                  isDark ? "bg-gradient-to-b from-[#3b0764] to-[#5b21b6]" : "bg-[#0F766E]"
+                }`}
                 aria-hidden
               >
                 <span className="font-nexus-banner text-4xl md:text-5xl tracking-widest select-none text-white">
@@ -638,7 +681,7 @@ export default function Home() {
               {/* Avatar (flow-safe overlap) */}
               <div className="flex justify-center -mt-10 flex-shrink-0">
                 <img
-                  src="/images/2.png"
+                  src={isDark ? "/images/2.png" : "/images/1.png"}
                   alt="Profile"
                   className="w-20 h-20 rounded-full object-cover border-2 border-white/20"
                 />
@@ -649,10 +692,10 @@ export default function Home() {
                 <span className="font-semibold text-white text-center">Hrithik</span>
                 {/* Role pills */}
                 <div className="flex flex-wrap justify-center gap-2">
-                  <span className="px-3 py-1 rounded-full border border-white/10 bg-transparent text-sm text-white/90 shadow-[0_0_8px_rgba(124,58,237,0.2)]">
+                  <span className="px-3 py-1 rounded-full border border-white/10 bg-transparent text-sm text-white/90 nexus-role-pill-glow">
                     AI/ML Engineer
                   </span>
-                  <span className="px-3 py-1 rounded-full border border-white/10 bg-transparent text-sm text-white/90 shadow-[0_0_8px_rgba(124,58,237,0.2)]">
+                  <span className="px-3 py-1 rounded-full border border-white/10 bg-transparent text-sm text-white/90 nexus-role-pill-glow">
                     Tech Explorer
                   </span>
                 </div>
@@ -670,7 +713,7 @@ export default function Home() {
                     className="cursor-pointer text-[var(--color-accent)]"
                     aria-label="LeetCode"
                   >
-                    <img src="https://cdn.simpleicons.org/leetcode/7C3AED" alt="" className="w-5 h-5" aria-hidden />
+                    <img src={`https://cdn.simpleicons.org/leetcode/${isDark ? "7C3AED" : "0F766E"}`} alt="" className="w-5 h-5" aria-hidden />
                   </a>
                   <a
                     href={SOCIAL_LINKS.linkedin}
@@ -766,9 +809,9 @@ export default function Home() {
                   href="/resume/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-md text-base font-medium border border-[var(--color-accent)] text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
+                  className={`inline-flex items-center justify-center gap-2 px-7 py-3 rounded-md text-base font-medium border border-[var(--color-accent)] text-[var(--color-accent)] transition-colors duration-225 hover:text-[#F5F5F5] ${isDark ? "hover:bg-[#7C3AED]" : "hover:bg-[#0F766E]"}`}
                 >
-                  <FileText className="w-4 h-4" aria-hidden="true" />
+                  <FileText className="w-4 h-4 text-current" aria-hidden="true" />
                   <span>Resume</span>
                 </a>
                 <button
@@ -776,17 +819,12 @@ export default function Home() {
                   ref={nexusTriggerRef}
                   aria-label="Open Nexus Card"
                   onClick={() => setIsNexusOpen(true)}
-                  className="inline-flex items-center justify-center px-4 py-3 rounded-md text-base font-medium border border-white/20 bg-black/5 dark:bg-white/10 backdrop-blur-md cursor-pointer hover:bg-white/10"
+                  className={`inline-flex items-center justify-center px-4 py-3 rounded-md text-base font-medium border bg-black/5 dark:bg-[rgba(26, 27, 29, 0.18)] backdrop-blur-md cursor-pointer transition-colors duration-225 ${isDark ? "border-[#E5E7EB] hover:bg-[#7C3AED]" : "border-black hover:bg-[#0F766E]"}`}
                 >
                   <img
-                    src="/logos/nexus.png"
+                    src={isDark ? "/logos/nexus-inverted.png" : "/logos/nexus.png"}
                     alt="Nexus logo"
-                    className="w-5 h-5 block dark:hidden"
-                  />
-                  <img
-                    src="/logos/nexus-inverted.png"
-                    alt="Nexus logo"
-                    className="w-[20px] h-[14px] hidden dark:block max-h-full"
+                    className="w-[20px] h-[14px] max-h-full"
                   />
                 </button>
               </div>
@@ -1006,8 +1044,8 @@ export default function Home() {
             >
               <ChevronLeft className="w-7 h-7 text-white" aria-hidden />
             </button>
-            <div className="relative flex-1 min-w-0 flex flex-col">
-              <span className="absolute bottom-2 right-2 z-10 font-sans text-xs font-medium tracking-widest pointer-events-none" style={{ color: "#7c3aed" }}>
+              <div className="relative flex-1 min-w-0 flex flex-col">
+              <span className="absolute bottom-2 right-2 z-10 font-sans text-xs font-medium tracking-widest pointer-events-none" style={{ color: isDark ? "#7c3aed" : "#0f766e" }}>
                 {topCurrentIndex + 1} / 3
               </span>
               <div
@@ -1089,7 +1127,7 @@ export default function Home() {
               <ChevronLeft className="w-7 h-7 text-white" aria-hidden />
             </button>
             <div className="relative flex-1 min-w-0 flex flex-col">
-              <span className="absolute bottom-2 right-2 z-10 font-sans text-xs font-medium tracking-widest pointer-events-none" style={{ color: "#7c3aed" }}>
+              <span className="absolute bottom-2 right-2 z-10 font-sans text-xs font-medium tracking-widest pointer-events-none" style={{ color: isDark ? "#7c3aed" : "#0f766e" }}>
                 {bottomCurrentIndex + 1} / 3
               </span>
               <div
@@ -1172,7 +1210,7 @@ export default function Home() {
           {/* Heading */}
           <div className="flex flex-col items-center text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-heading font-bold">
-              Let's Build Something
+              {"Let's Build Something"}
             </h2>
             <h2 className="text-2xl md:text-3xl font-heading font-bold">
               Amazing Together
@@ -1210,7 +1248,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-base font-semibold text-[var(--color-fg)]">LinkedIn</h3>
-                    <p className="text-sm text-zinc-400">Let's connect professionally</p>
+                    <p className="text-sm text-zinc-400">{"Let's connect professionally"}</p>
                   </div>
                   <a
                     href={SOCIAL_LINKS.linkedin}
@@ -1248,7 +1286,7 @@ export default function Home() {
             {/* Right: Contact Form */}
             <div className="md:col-span-3 flex">
               <div className="p-6 rounded-2xl bg-white/5 dark:bg-white/5 border border-[var(--color-accent)]/10 backdrop-blur-md shadow-lg shadow-black/20 w-full">
-                <form className="flex flex-col gap-4">
+                <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                   {/* Name Field */}
                   <div>
                     <label htmlFor="user_name" className="sr-only">
@@ -1311,10 +1349,16 @@ export default function Home() {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-full px-6 py-3 rounded-lg bg-[var(--color-accent)] text-white text-base font-medium flex items-center justify-center gap-2"
+                    disabled={isSubmitting}
+                    className="w-full px-6 py-3 rounded-lg bg-[var(--color-accent)] text-white text-base font-medium flex items-center justify-center gap-2 disabled:opacity-80 disabled:cursor-not-allowed"
                   >
-                    Send Message
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </button>
+                  {statusMessage && (
+                    <p className="text-sm text-[var(--color-fg)]/80 mt-1">
+                      {statusMessage}
+                    </p>
+                  )}
                 </form>
               </div>
             </div>
