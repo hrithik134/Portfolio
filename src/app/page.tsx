@@ -428,7 +428,14 @@ export default function Home() {
     setTimeout(() => {
       setIsNexusOpen(false);
       setIsNexusClosing(false);
-      nexusTriggerRef.current?.focus();
+      const trigger = nexusTriggerRef.current;
+      if (trigger && typeof trigger.focus === "function") {
+        try {
+          (trigger as HTMLElement).focus({ preventScroll: true } as any);
+        } catch {
+          trigger.focus();
+        }
+      }
     }, 200);
   };
 
@@ -816,6 +823,7 @@ export default function Home() {
                 </a>
                 <button
                   type="button"
+                  id="nexus-trigger"
                   ref={nexusTriggerRef}
                   aria-label="Open Nexus Card"
                   onClick={() => setIsNexusOpen(true)}
@@ -1088,7 +1096,7 @@ export default function Home() {
                   ref={(el) => {
                     topCardRefs.current[i] = el;
                   }}
-                  className="min-w-full max-w-full flex-shrink-0 snap-center p-6 rounded bg-white/5 dark:bg-white/5 border-2 border-[rgba(23,23,23,1)] backdrop-blur-md shadow-lg shadow-black/20 box-border"
+                  className="min-w-full max-w-full flex-shrink-0 snap-center p-6 rounded bg-white dark:bg-white/5 border-0 backdrop-blur-md shadow-lg shadow-black/20 box-border"
                   role="group"
                   aria-roledescription="slide"
                   aria-label={p.title}
@@ -1170,7 +1178,7 @@ export default function Home() {
                   ref={(el) => {
                     bottomCardRefs.current[i] = el;
                   }}
-                  className="min-w-full max-w-full flex-shrink-0 snap-center p-6 rounded bg-white/5 dark:bg-white/5 border-2 border-[rgba(23,23,23,1)] backdrop-blur-md shadow-lg shadow-black/20 box-border"
+                  className="min-w-full max-w-full flex-shrink-0 snap-center p-6 rounded bg-white dark:bg-white/5 border-0 backdrop-blur-md shadow-lg shadow-black/20 box-border"
                   role="group"
                   aria-roledescription="slide"
                   aria-label={p.title}
@@ -1222,7 +1230,7 @@ export default function Home() {
             {/* Left: 3 cards */}
             <div className="md:col-span-2 flex flex-col gap-8">
               {/* Email Card */}
-              <div className="p-6 rounded-2xl bg-white/5 dark:bg-white/5 border border-[var(--color-accent)]/10 backdrop-blur-md shadow-lg shadow-black/20">
+              <div className="p-6 rounded-2xl bg-white/5 dark:bg-white/5 border border-white/10 backdrop-blur-md shadow-lg shadow-black/20">
                 <div className="flex flex-col gap-3">
                   <div className="w-10 h-10 rounded-lg bg-[var(--color-accent)] flex items-center justify-center overflow-hidden" aria-hidden="true">
                     <img src="/Contact/email.png" alt="" className="w-5 h-5 object-contain brightness-0 invert" />
@@ -1241,7 +1249,7 @@ export default function Home() {
               </div>
 
               {/* LinkedIn Card */}
-              <div className="p-6 rounded-2xl bg-white/5 dark:bg-white/5 border border-[var(--color-accent)]/10 backdrop-blur-md shadow-lg shadow-black/20">
+              <div className="p-6 rounded-2xl bg-white/5 dark:bg-white/5 border border-white/10 backdrop-blur-md shadow-lg shadow-black/20">
                 <div className="flex flex-col gap-3">
                   <div className="w-10 h-10 rounded-lg bg-[var(--color-accent)] flex items-center justify-center overflow-hidden" aria-hidden="true">
                     <img src="/Contact/linkedin.png" alt="" className="w-5 h-5 object-contain brightness-0 invert" />
@@ -1262,7 +1270,7 @@ export default function Home() {
               </div>
 
               {/* GitHub Card */}
-              <div className="p-6 rounded-2xl bg-white/5 dark:bg-white/5 border border-[var(--color-accent)]/10 backdrop-blur-md shadow-lg shadow-black/20">
+              <div className="p-6 rounded-2xl bg-white/5 dark:bg-white/5 border border-white/10 backdrop-blur-md shadow-lg shadow-black/20">
                 <div className="flex flex-col gap-3">
                   <div className="w-10 h-10 rounded-lg bg-[var(--color-accent)] flex items-center justify-center overflow-hidden" aria-hidden="true">
                     <img src="/Contact/github.png" alt="" className="w-5 h-5 object-contain brightness-0 invert" />
@@ -1285,7 +1293,7 @@ export default function Home() {
 
             {/* Right: Contact Form */}
             <div className="md:col-span-3 flex">
-              <div className="p-6 rounded-2xl bg-white/5 dark:bg-white/5 border border-[var(--color-accent)]/10 backdrop-blur-md shadow-lg shadow-black/20 w-full">
+              <div className="p-6 rounded-2xl bg-white/5 dark:bg-white/5 border border-white/10 backdrop-blur-md shadow-lg shadow-black/20 w-full">
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                   {/* Name Field */}
                   <div>
