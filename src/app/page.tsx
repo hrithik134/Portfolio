@@ -837,8 +837,8 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            {/* Right Column - Image */}
-            <div className="flex-1 flex justify-center md:justify-end items-center relative">
+            {/* Right Column - Image (desktop only) */}
+            <div className="hidden md:flex flex-1 justify-center md:justify-end items-center relative">
               <div className="relative w-full max-w-[400px] aspect-square">
                 <img
                   src="/images/1.png"
@@ -870,6 +870,32 @@ export default function Home() {
           Scroll to explore
         </div>
       </section>
+
+      {/* Profile image on mobile: between hero buttons and About Me */}
+      <div className="md:hidden flex justify-center px-4 py-10 -translate-y-[50px]">
+        <div className="relative w-48 h-48 aspect-square">
+          <img
+            src="/images/1.png"
+            alt="Profile"
+            className="absolute inset-0 w-full h-full rounded-full object-cover transition-opacity duration-[1.5s]"
+            style={{
+              opacity: imageReady && !isDark ? 1 : 0,
+              zIndex: !isDark ? 1 : 0,
+            }}
+            aria-hidden={isDark}
+          />
+          <img
+            src="/images/2.png"
+            alt="Profile"
+            className="absolute inset-0 w-full h-full rounded-full object-cover transition-opacity duration-[1.5s]"
+            style={{
+              opacity: imageReady && isDark ? 1 : 0,
+              zIndex: isDark ? 1 : 0,
+            }}
+            aria-hidden={!isDark}
+          />
+        </div>
+      </div>
 
       <AnimatedSection
         id="about"
