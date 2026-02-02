@@ -813,7 +813,7 @@ export default function Home() {
                   <span>GitHub</span>
                 </a>
                 <a
-                  href="/resume/resume.pdf"
+                  href="https://drive.google.com/file/d/18Fpu0xgacW40QaTrlycrEIt54GEI7iua/view?usp=sharing"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`inline-flex items-center justify-center gap-2 px-7 py-3 rounded-md text-base font-medium border border-[var(--color-accent)] text-[var(--color-accent)] transition-colors duration-225 hover:text-[#F5F5F5] ${isDark ? "hover:bg-[#7C3AED]" : "hover:bg-[#0F766E]"}`}

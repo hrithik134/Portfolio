@@ -106,7 +106,7 @@ export default function Navbar() {
               aria-hidden="true"
             />
             <Moon
-              className="w-3 h-3 text-slate-200 absolute right-1"
+              className="w-3 h-3 text-black bg-transparent absolute right-1"
               aria-hidden="true"
             />
             <div
@@ -163,7 +163,7 @@ export default function Navbar() {
                 aria-hidden="true"
               />
               <Moon
-                className="w-3 h-3 text-slate-200 absolute right-1"
+                className="w-3 h-3 text-black bg-transparent absolute right-1"
                 aria-hidden="true"
               />
               <div
